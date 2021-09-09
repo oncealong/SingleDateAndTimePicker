@@ -75,6 +75,7 @@ public class SingleDatePickerMainActivityWithDoublePicker extends AppCompatActiv
 
 
 
+    // Click me to open single dialog for TIME only
     @OnClick(R.id.singleTimeText)
     public void simpleTimeClicked() {
 
@@ -88,19 +89,24 @@ public class SingleDatePickerMainActivityWithDoublePicker extends AppCompatActiv
         singleBuilder = new SingleDateAndTimePickerDialog.Builder(this)
                 .setTimeZone(TimeZone.getDefault())
                 .bottomSheet()
-                .curved()
+//                .curved()
+                .cyclic(true)
 
+                // 默认时间点
                 .defaultDate(defaultDate)
 
                 //.titleTextColor(Color.GREEN)
                 //.backgroundColor(Color.BLACK)
                 //.mainColor(Color.GREEN)
-
                 .displayMinutes(true)
                 .displayHours(true)
-                .displayDays(false)
-                //.displayMonth(true)
-                //.displayYears(true)
+                .displayDays(true)
+                .displayMonth(false)
+//                .displayDaysOfMonth(true)
+                .displayMonthNumbers(false)
+                .displayYears(false)
+                .displayAmPm(false)
+                .mustBeOnFuture()
 
                 .displayListener(new SingleDateAndTimePickerDialog.DisplayListener() {
                     @Override
@@ -114,17 +120,23 @@ public class SingleDatePickerMainActivityWithDoublePicker extends AppCompatActiv
                     }
                 })
 
-                .title("Simple Time")
+                .title("取消")
                 .listener(new SingleDateAndTimePickerDialog.Listener() {
                     @Override
                     public void onDateSelected(Date date) {
                         singleTimeText.setText(simpleTimeFormat.format(date));
+                    }
+
+                    @Override
+                    public void onCanceled() {
+
                     }
                 });
         singleBuilder.display();
     }
 
 
+    //Click me to open single dialog for DATE only
     @OnClick(R.id.singleDateText)
     public void simpleDateClicked() {
 
@@ -162,10 +174,16 @@ public class SingleDatePickerMainActivityWithDoublePicker extends AppCompatActiv
                     public void onDateSelected(Date date) {
                         singleDateText.setText(simpleDateOnlyFormat.format(date));
                     }
+
+                    @Override
+                    public void onCanceled() {
+
+                    }
                 });
         singleBuilder.display();
     }
 
+    // Click me to open single dialog
     @OnClick(R.id.singleLayout)
     public void simpleClicked() {
 
@@ -221,6 +239,11 @@ public class SingleDatePickerMainActivityWithDoublePicker extends AppCompatActiv
                     public void onDateSelected(Date date) {
                         singleText.setText(simpleDateFormat.format(date));
                     }
+
+                    @Override
+                    public void onCanceled() {
+
+                    }
                 });
         singleBuilder.display();
     }
@@ -240,12 +263,12 @@ public class SingleDatePickerMainActivityWithDoublePicker extends AppCompatActiv
 
         doubleBuilder = new DoubleDateAndTimePickerDialog.Builder(this)
                 .setTimeZone(TimeZone.getDefault())
-                //.bottomSheet()
+                .bottomSheet()
                 //.curved()
 
 //                .backgroundColor(Color.BLACK)
 //                .mainColor(Color.GREEN)
-                .minutesStep(15)
+                .minutesStep(30)
                 .mustBeOnFuture()
 
                 .minDateRange(minDate)
@@ -301,6 +324,11 @@ public class SingleDatePickerMainActivityWithDoublePicker extends AppCompatActiv
                     @Override
                     public void onDateSelected(Date date) {
                         singleDateLocaleText.setText(simpleDateLocaleFormat.format(date));
+                    }
+
+                    @Override
+                    public void onCanceled() {
+
                     }
                 });
         singleBuilder.display();

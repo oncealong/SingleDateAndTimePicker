@@ -35,6 +35,7 @@ public abstract class BaseDialog {
 
     protected boolean okClicked = false;
     protected boolean curved = false;
+    protected boolean cyclic = false;
     protected boolean mustBeOnFuture = false;
     protected int minutesStep = STEP_MINUTES_DEFAULT;
 

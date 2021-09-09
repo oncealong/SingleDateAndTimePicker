@@ -66,13 +66,13 @@ public class BottomSheetHelper {
 
           windowManager.addView(view, layoutParams);
 
-          view.findViewById(R.id.bottom_sheet_background)
-              .setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                  hide();
-                }
-              });
+//          view.findViewById(R.id.bottom_sheet_background)
+//              .setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                  hide();
+//                }
+//              });
 
           view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override

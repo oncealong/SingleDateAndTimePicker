@@ -3,6 +3,7 @@ package com.github.florent37.singledateandtimepicker.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import android.util.Log;
 import com.github.florent37.singledateandtimepicker.R;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +19,8 @@ import static com.github.florent37.singledateandtimepicker.widget.SingleDateAndT
 
 public class WheelDayPicker extends WheelPicker<DateWithLabel> {
 
-    private static final String DAY_FORMAT_PATTERN = "EEE d MMM";
+    // https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+    private static final String DAY_FORMAT_PATTERN = "MM月d日 EEE";
 
     private SimpleDateFormat simpleDateFormat;
     private SimpleDateFormat customDateFormat;
@@ -70,6 +72,7 @@ public class WheelDayPicker extends WheelPicker<DateWithLabel> {
 
     @Override
     protected List<DateWithLabel> generateAdapterValues(boolean showOnlyFutureDates) {
+        showOnlyFutureDates = true;
         final List<DateWithLabel> days = new ArrayList<>();
 
         Calendar instance = Calendar.getInstance();
@@ -94,6 +97,9 @@ public class WheelDayPicker extends WheelPicker<DateWithLabel> {
             days.add(new DateWithLabel(getFormattedValue(date), date));
         }
 
+        for(DateWithLabel item : days){
+            Log.e("alongwang", item.label);
+        }
         return days;
     }
 

@@ -1,7 +1,9 @@
 package com.github.florent37.singledateandtimepicker.dialog;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import androidx.annotation.Nullable;
 import static com.github.florent37.singledateandtimepicker.widget.SingleDateAndTimeConstants.STEP_MINUTES_DEFAULT;
 
 public class SingleDateAndTimePickerDialog extends BaseDialog {
+    private static final String TAG = "SingleDateAndTimePicker";
 
     private final DateHelper dateHelper = new DateHelper();
     private Listener listener;
@@ -29,7 +32,7 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
     private SingleDateAndTimePicker picker;
 
     @Nullable
-    private String title;
+    private String leftTitle;
     @Nullable
     private Integer titleTextSize;
     @Nullable
@@ -105,12 +108,12 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
 
         final View sheetContentLayout = view.findViewById(R.id.sheetContentLayout);
         if (sheetContentLayout != null) {
-            sheetContentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
+//            sheetContentLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
 
             if (backgroundColor != null) {
                 sheetContentLayout.setBackgroundColor(backgroundColor);
@@ -119,7 +122,15 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
 
         final TextView titleTextView = (TextView) view.findViewById(R.id.sheetTitle);
         if (titleTextView != null) {
-            titleTextView.setText(title);
+            titleTextView.setText(leftTitle);
+            titleTextView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e(TAG,"click titleTextView");
+                    okClicked = false;
+                    close();
+                }
+            });
 
             if (titleTextColor != null) {
                 titleTextView.setTextColor(titleTextColor);
@@ -144,6 +155,7 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
             picker.setCurved(false);
             picker.setVisibleItemCount(5);
         }
+        picker.setCyclic(cyclic);
         picker.setMustBeOnFuture(mustBeOnFuture);
 
         picker.setStepSizeMinutes(minutesStep);
@@ -196,6 +208,11 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
         return this;
     }
 
+    public SingleDateAndTimePickerDialog setCyclic(boolean cyclic){
+        this.cyclic = cyclic;
+        return this;
+    }
+
     public SingleDateAndTimePickerDialog setMinutesStep(int minutesStep) {
         this.minutesStep = minutesStep;
         return this;
@@ -205,8 +222,8 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
         this.displayListener = displayListener;
     }
 
-    public SingleDateAndTimePickerDialog setTitle(@Nullable String title) {
-        this.title = title;
+    public SingleDateAndTimePickerDialog setLeftTitle(@Nullable String leftTitle) {
+        this.leftTitle = leftTitle;
         return this;
     }
 
@@ -317,8 +334,12 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
         super.close();
         bottomSheetHelper.hide();
 
-        if (listener != null && okClicked) {
-            listener.onDateSelected(picker.getDate());
+        if (listener != null) {
+            if (okClicked) {
+                listener.onDateSelected(picker.getDate());
+            } else {
+                listener.onCanceled();
+            }
         }
     }
 
@@ -330,6 +351,7 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
 
     public interface Listener {
         void onDateSelected(Date date);
+        void onCanceled();
     }
 
     public interface DisplayListener {
@@ -361,6 +383,7 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
         private boolean bottomSheet;
 
         private boolean curved;
+        private boolean cyclic;
         private boolean mustBeOnFuture;
         private int minutesStep = STEP_MINUTES_DEFAULT;
 
@@ -433,6 +456,11 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
 
         public Builder curved() {
             this.curved = true;
+            return this;
+        }
+
+        public Builder cyclic(boolean cyclic) {
+            this.cyclic = cyclic;
             return this;
         }
 
@@ -548,12 +576,13 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
 
         public SingleDateAndTimePickerDialog build() {
             final SingleDateAndTimePickerDialog dialog = new SingleDateAndTimePickerDialog(context, bottomSheet)
-                    .setTitle(title)
+                    .setLeftTitle(title)
                     .setTitleTextSize(titleTextSize)
                     .setBottomSheetHeight(bottomSheetHeight)
                     .setTodayText(todayText)
                     .setListener(listener)
                     .setCurved(curved)
+                    .setCyclic(cyclic)
                     .setMinutesStep(minutesStep)
                     .setMaxDateRange(maxDate)
                     .setMinDateRange(minDate)
